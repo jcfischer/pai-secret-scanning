@@ -1,0 +1,22 @@
+# Test fixture — contains NO secrets, should pass all scans
+
+# Normal code
+const MAX_RETRIES = 3;
+const TIMEOUT_MS = 5000;
+
+# Normal configuration
+log_level = "info"
+output_format = "json"
+
+# Generic path (not personal)
+template_dir = "./templates"
+output_dir = "./dist"
+
+# Normal function
+function processEvent(event) {
+  return event.type === "session.start";
+}
+
+# Normal comments
+# This module handles event processing
+# See documentation at docs/events.md

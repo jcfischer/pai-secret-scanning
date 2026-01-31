@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# PAI Secret Scanning Gate — Global Pre-Commit Hook (F-086)
+#
+# Scans staged files for secrets using gitleaks before every commit.
+# Bypass: git commit --no-verify (CI gate still catches on push)
+#
+# Installation:
+#   cp security/pre-commit ~/.config/git/hooks/pre-commit
+#   chmod +x ~/.config/git/hooks/pre-commit
+#   git config --global core.hooksPath ~/.config/git/hooks
+
+# --- Configuration ---
+GITLEAKS_CONFIG="${GITLEAKS_CONFIG:-$HOME/.config/gitleaks/.gitleaks.toml}"
+
+# --- Graceful degradation ---
+if ! command -v gitleaks &>/dev/null; then
+  echo "⚠️  gitleaks not installed — skipping secret scan"
+  echo "   Install: brew install gitleaks"
+  exit 0
+fi
+
+if [ ! -f "$GITLEAKS_CONFIG" ]; then
+  echo "⚠️  gitleaks config not found at $GITLEAKS_CONFIG — skipping"
+  echo "   Run: security/install-secret-scanning.sh"
+  exit 0
+fi
+
+# --- Scan staged files ---
+gitleaks protect --staged --config "$GITLEAKS_CONFIG" --verbose
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -ne 0 ]; then
+  echo ""
+  echo "🔒 Secret detected in staged files — commit blocked"
+  echo ""
+  echo "   Options:"
+  echo "   1. Remove the secret and re-stage"
+  echo "   2. Add to allowlist in $GITLEAKS_CONFIG"
+  echo "   3. Bypass: git commit --no-verify"
+  echo "      (CI gate will still catch on push)"
+  echo "      Add to commit message: [gitleaks-bypass: reason]"
+  exit 1
+fi
