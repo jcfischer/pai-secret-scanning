@@ -91,6 +91,27 @@ description = "ElevenLabs API key detected"
 regex = '''(?i)elevenlabs[_\-\s]*(?:key|api|token)[_\-\s]*[=:]\s*[a-f0-9]{32}'''
 tags = ["pai", "api-key", "elevenlabs"]
 
+# Replicate API tokens (r8_ prefix + 40 alphanumeric chars)
+[[rules]]
+id = "pai-replicate-key"
+description = "Replicate API token detected"
+regex = '''r8_[a-zA-Z0-9]{40}'''
+tags = ["pai", "api-key", "replicate"]
+
+# HuggingFace API tokens (hf_ prefix + 34+ alphanumeric chars)
+[[rules]]
+id = "pai-huggingface-key"
+description = "HuggingFace API token detected"
+regex = '''hf_[a-zA-Z0-9]{34,}'''
+tags = ["pai", "api-key", "huggingface"]
+
+# Groq API keys (gsk_ prefix + 52 alphanumeric chars)
+[[rules]]
+id = "pai-groq-key"
+description = "Groq API key detected"
+regex = '''gsk_[a-zA-Z0-9]{52}'''
+tags = ["pai", "api-key", "groq"]
+
 # Inline .env values (KEY=VALUE in .env files)
 [[rules]]
 id = "pai-env-inline"

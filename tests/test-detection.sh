@@ -160,7 +160,28 @@ assert_detect \
   'const TOKEN = "123456789:AAF-xvHj5kFh-abc123def456ghi789jklm";' \
   1
 
-# Test 5: Clean file passes
+# Test 5: Replicate API token detection
+assert_detect \
+  "Detects Replicate API token" \
+  "ai-config.ts" \
+  'const REPLICATE_TOKEN = "r8_aBcDeFgHiJkLmNoPqRsTuVwXyZ0123456789abcd";' \
+  1
+
+# Test 6: HuggingFace API token detection
+assert_detect \
+  "Detects HuggingFace API token" \
+  "hf-client.ts" \
+  'export const HF_TOKEN = "hf_aBcDeFgHiJkLmNoPqRsTuVwXyZ01234567";' \
+  1
+
+# Test 7: Groq API key detection
+assert_detect \
+  "Detects Groq API key" \
+  "groq-client.ts" \
+  'const GROQ_KEY = "gsk_aBcDeFgHiJkLmNoPqRsTuVwXyZ0123456789abcdefghijklmnopqr";' \
+  1
+
+# Test 8: Clean file passes
 assert_detect \
   "Passes clean TypeScript file" \
   "clean.ts" \
